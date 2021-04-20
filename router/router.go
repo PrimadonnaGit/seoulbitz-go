@@ -1,11 +1,13 @@
 package router
 
 import (
-	"github.com/labstack/echo/v4"
-	echo "github.com/labstack/echo/v4/middleware"
-	middleware "net/http"
+	"net/http"
+
+	echo "github.com/labstack/echo/v4"
+	middleware "github.com/labstack/echo/v4/middleware"
+
 	// auth "[auth 폴더 위치]"
-	// handler "[handler 폴더 위치]"
+	handler "github.com/PrimadonnaGit/seoulbitz-go/handler"
 )
 
 // Router function
@@ -34,7 +36,11 @@ func Router() *echo.Echo {
 	})
 
 	// Router List
-	// getList := e.Group("/get")
+	shopRouterGroup := e.Group("/shop")
+	{
+		shopRouterGroup.GET("/:id", handler.GetShop)
+	}
+
 	// {
 	// getList.GET("[path]", handler.[요청함수])
 	// getList.GET("[path][:pathParameter]", handler.[요청함수])
