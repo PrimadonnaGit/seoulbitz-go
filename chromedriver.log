@@ -1,0 +1,4 @@
+[1620720323.726][INFO]: Starting ChromeDriver 89.0.4389.23 (61b08ee2c50024bab004e48d2b1b083cdbdac579-refs/branch-heads/4389@{#294}) on port 9515
+[1620720323.726][INFO]: Please see https://chromedriver.chromium.org/security-considerations for suggestions on keeping ChromeDriver safe.
+[1620720323.750][SEVERE]: bind() returned an error: 각 소켓 주소(프로토콜/네트워크 주소/포트)는 하나만 사용할 수 있습니다. (0x2740)
+[1620720323.751][INFO]: listen on IPv6 failed with error ERR_ADDRESS_IN_USE

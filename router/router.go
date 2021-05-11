@@ -6,7 +6,6 @@ import (
 	echo "github.com/labstack/echo/v4"
 	middleware "github.com/labstack/echo/v4/middleware"
 
-	// auth "[auth 폴더 위치]"
 	handler "github.com/PrimadonnaGit/seoulbitz-go/handler"
 )
 
@@ -16,7 +15,7 @@ func Router() *echo.Echo {
 	e := echo.New()
 
 	// debug 모드로 사용하기 위해서는 디버그 설정을 true로 변경
-	e.Debug = true
+	e.Debug = false
 
 	// echo middleware func
 	e.Use(middleware.Logger())  //Setting logger
@@ -36,26 +35,16 @@ func Router() *echo.Echo {
 	})
 
 	// Router List
-	shopRouterGroup := e.Group("/shop")
+
+	crawlerRouterGroup := e.Group("/crawling")
 	{
-		shopRouterGroup.GET("/:id", handler.GetShop)
+		crawlerRouterGroup.GET("/:searchKeyword", handler.ExecCrawling)
 	}
 
-	// {
-	// getList.GET("[path]", handler.[요청함수])
-	// getList.GET("[path][:pathParameter]", handler.[요청함수])
-	// }
-
-	// admin := e.Group("/admin")
-	// {
-	// admin.GET("[path]", handler.[요청함수])
-	// admin.GET("[path]", handler.[요청함수], auth.[로그인체크함수], auth.[어드민체크함수])
-	// }
-
-	// login := e.Group("/login")
-	// {
-	// login.POST("", auth.auth.[로그인함수])
-	// }
+	shopRouterGroup := e.Group("/shop")
+	{
+		shopRouterGroup.GET("/", handler.GetShop)
+	}
 
 	return e
 }
