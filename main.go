@@ -8,7 +8,7 @@ import (
 
 func main() {
 	// debug mode on and off
-	debug := false
+	debug := true
 
 	// router를 정의한 파일을 Import 후, router 선언
 	echoR := router.Router()
@@ -21,7 +21,6 @@ func main() {
 	} else {
 		// 보안 접속을 위한 https 서버 실행
 		// "cert.pem"과 "privkey.pem" 파일이 필요함
-		// echoR.Logger.Fatal(echoR.StartTLS(":80", "cert.pem", "privkey.pem"))
-		echoR.Logger.Fatal(echoR.Start(":80"))
+		echoR.Logger.Fatal(echoR.StartTLS(":80", "cert.pem", "privkey.pem"))
 	}
 }
