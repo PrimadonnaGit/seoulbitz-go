@@ -25,47 +25,47 @@ func sleepSecond(second time.Duration) {
 
 type KakaoResp struct {
 	Documents []struct {
-		 Address struct {
-				AddressName       string `json:"address_name"`
-				BCode             string `json:"b_code"`
-				HCode             string `json:"h_code"`
-				MainAddressNo     string `json:"main_address_no"`
-				MountainYn        string `json:"mountain_yn"`
-				Region1DepthName  string `json:"region_1depth_name"`
-				Region2DepthName  string `json:"region_2depth_name"`
-				Region3DepthHName string `json:"region_3depth_h_name"`
-				Region3DepthName  string `json:"region_3depth_name"`
-				SubAddressNo      string `json:"sub_address_no"`
-				X                 string `json:"x"`
-		 } `json:"address"`
-		 AddressName string `json:"address_name"`
-		 AddressType string `json:"address_type"`
-		 RoadAddress struct {
-				AddressName      string `json:"address_name"`
-				BuildingName     string `json:"building_name"`
-				MainBuildingNo   string `json:"main_building_no"`
-				Region1DepthName string `json:"region_1depth_name"`
-				Region2DepthName string `json:"region_2depth_name"`
-				Region3DepthName string `json:"region_3depth_name"`
-				RoadName         string `json:"road_name"`
-				NdYn             string `json:"nd_yn"`
-				X                string `json:"x"`
-				Y                string `json:"y"`
-				ZoneNo           string `json:"zone_no"`
-		 } `json:"road_address"`
-		 X string `json:"x"`
-		 Y string `json:"y"`
+		Address struct {
+			AddressName       string `json:"address_name"`
+			BCode             string `json:"b_code"`
+			HCode             string `json:"h_code"`
+			MainAddressNo     string `json:"main_address_no"`
+			MountainYn        string `json:"mountain_yn"`
+			Region1DepthName  string `json:"region_1depth_name"`
+			Region2DepthName  string `json:"region_2depth_name"`
+			Region3DepthHName string `json:"region_3depth_h_name"`
+			Region3DepthName  string `json:"region_3depth_name"`
+			SubAddressNo      string `json:"sub_address_no"`
+			X                 string `json:"x"`
+		} `json:"address"`
+		AddressName string `json:"address_name"`
+		AddressType string `json:"address_type"`
+		RoadAddress struct {
+			AddressName      string `json:"address_name"`
+			BuildingName     string `json:"building_name"`
+			MainBuildingNo   string `json:"main_building_no"`
+			Region1DepthName string `json:"region_1depth_name"`
+			Region2DepthName string `json:"region_2depth_name"`
+			Region3DepthName string `json:"region_3depth_name"`
+			RoadName         string `json:"road_name"`
+			NdYn             string `json:"nd_yn"`
+			X                string `json:"x"`
+			Y                string `json:"y"`
+			ZoneNo           string `json:"zone_no"`
+		} `json:"road_address"`
+		X string `json:"x"`
+		Y string `json:"y"`
 	} `json:"documents"`
 	Meta struct {
-		 IsEnd         bool `json:"is_end"`
-		 PageableCount int  `json:"pageable_count"`
-		 TotalCount    int  `json:"total_count"`
+		IsEnd         bool `json:"is_end"`
+		PageableCount int  `json:"pageable_count"`
+		TotalCount    int  `json:"total_count"`
 	} `json:"meta"`
 }
 
-func getKAKAOLatlng(address string) (string, string){
+func getKAKAOLatlng(address string) (string, string) {
 	const (
-		KAKAO = "KakaoAK cc116147fce20da7314166dce21f0305"
+		KAKAO     = "KakaoAK cc116147fce20da7314166dce21f0305"
 		KAKAO_URL = "https://dapi.kakao.com/v2/local/search/address.json"
 	)
 
@@ -90,8 +90,8 @@ func getKAKAOLatlng(address string) (string, string){
 	checkErr(err)
 
 	if len(kakaoResp.Documents) > 0 {
-		return kakaoResp.Documents[0].Y, kakaoResp.Documents[0].X		
-	}else {
+		return kakaoResp.Documents[0].Y, kakaoResp.Documents[0].X
+	} else {
 		return "0", "0"
 	}
 
@@ -146,8 +146,8 @@ func loopPlaceElements(placeItems []webdriver.WebElement) {
 func KakaoCrawling(searchKeyword string) {
 
 	const (
-		seleniumPath  = "./crawler/chromedriver.exe"
-		searchURL     = "https://map.kakao.com/"
+		seleniumPath = "./crawler/chromedriver.exe"
+		searchURL    = "https://map.kakao.com/"
 	)
 
 	chromeDriver := webdriver.NewChromeDriver(seleniumPath)
@@ -155,8 +155,17 @@ func KakaoCrawling(searchKeyword string) {
 	err := chromeDriver.Start()
 	checkErr(err)
 
-	desired := webdriver.Capabilities{"Platform": "Windows"}
+	desired := webdriver.Capabilities{
+		"browserName": "chrome",
+		"Path":        "",
+		"Args": []string{
+			"--headless",
+			"--no-sandbox",
+			"--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_2) AppleWebKit/604.4.7 (KHTML, like Gecko) Version/11.0.2 Safari/604.4.7",
+		},
+	}
 	required := webdriver.Capabilities{}
+
 	session, err := chromeDriver.NewSession(desired, required)
 	defer session.Delete()
 	checkErr(err)
