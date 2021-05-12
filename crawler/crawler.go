@@ -2,6 +2,7 @@ package crawler
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -9,7 +10,6 @@ import (
 	"time"
 
 	"github.com/PrimadonnaGit/seoulbitz-go/mysql"
-	"github.com/fedesog/webdriver"
 	"github.com/tebeka/selenium"
 	"github.com/tebeka/selenium/chrome"
 )
@@ -98,7 +98,7 @@ func getKAKAOLatlng(address string) (string, string) {
 
 }
 
-func loopPlaceElements(placeItems []webdriver.WebElement) {
+func loopPlaceElements(placeItems []selenium.WebElement) {
 	for _, placeItem := range placeItems {
 		placeTitleElement, err := placeItem.FindElement(selenium.ByCSSSelector, ".head_item .tit_name .link_name")
 		checkErr(err)
@@ -167,12 +167,12 @@ func KakaoCrawling(searchKeyword string) {
 	service, err := selenium.NewChromeDriverService(seleniumPath, port)
 	checkErr(err)
 
-	defer service.Close()
+	defer service.Stop()
 
 	caps := selenium.Capabilities{}
 
 	caps.AddChrome(chrome.Capabilities{
-		Args: []string{"--headless"}
+		Args: []string{"--headless"},
 	})
 
 	session, err := selenium.NewRemote(caps, fmt.Sprintf("http://localhost:%d", port))
