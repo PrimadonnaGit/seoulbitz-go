@@ -11,6 +11,7 @@ import (
 	"github.com/PrimadonnaGit/seoulbitz-go/mysql"
 	"github.com/fedesog/webdriver"
 	"github.com/tebeka/selenium"
+	"github.com/tebeka/selenium/chrome"
 )
 
 func checkErr(err error) {
@@ -148,29 +149,38 @@ func KakaoCrawling(searchKeyword string) {
 	const (
 		seleniumPath = "./crawler/chromedriver.exe"
 		searchURL    = "https://map.kakao.com/"
+		port         = 5001
 	)
 
-	chromeDriver := webdriver.NewChromeDriver(seleniumPath)
-	defer chromeDriver.Stop()
-	err := chromeDriver.Start()
+	// chromeDriver := webdriver.NewChromeDriver(seleniumPath)
+	// defer chromeDriver.Stop()
+	// err := chromeDriver.Start()
+	// checkErr(err)
+
+	// desired := webdriver.Capabilities{"Platform": "Windows"}
+
+	// required := webdriver.Capabilities{}
+	// session, err := chromeDriver.NewSession(desired, required)
+	// defer session.Delete()
+	// checkErr(err)
+
+	service, err := selenium.NewChromeDriverService(seleniumPath, port)
 	checkErr(err)
 
-	desired := webdriver.Capabilities{
-		"browserName": "chrome",
-		"Path":        "",
-		"Args": []string{
-			"--headless",
-			"--no-sandbox",
-			"--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_2) AppleWebKit/604.4.7 (KHTML, like Gecko) Version/11.0.2 Safari/604.4.7",
-		},
-	}
-	required := webdriver.Capabilities{}
+	defer service.Close()
 
-	session, err := chromeDriver.NewSession(desired, required)
-	defer session.Delete()
+	caps := selenium.Capabilities{}
+
+	caps.AddChrome(chrome.Capabilities{
+		Args: []string{"--headless"}
+	})
+
+	session, err := selenium.NewRemote(caps, fmt.Sprintf("http://localhost:%d", port))
 	checkErr(err)
 
-	err = session.Url(searchURL)
+	defer session.Quit()
+
+	err = session.Get(searchURL)
 	checkErr(err)
 
 	// 검색 키워드 입력
