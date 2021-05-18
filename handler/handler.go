@@ -25,7 +25,7 @@ func GetShop(c echo.Context) error {
 
 	db := mysql.ConnectDB()
 	defer db.Close()
-	rows, err := db.Query("SELECT * FROM kakao_map Where Score > 4")
+	rows, err := db.Query("SELECT * FROM kakao_map Where score >= 4 AND scoreCount >= 10")
 	if err != nil {
 		fmt.Println(err)	
 	}
