@@ -14,6 +14,14 @@ import (
 	"github.com/tebeka/selenium/chrome"
 )
 
+const (
+	seleniumPath = "./crawler/chromedriver.exe"
+	searchURL    = "https://map.kakao.com/"
+	port         = 5001
+	KAKAO     = "KakaoAK cc116147fce20da7314166dce21f0305"
+	KAKAO_URL = "https://dapi.kakao.com/v2/local/search/address.json"
+)
+
 func checkErr(err error) {
 	if err != nil {
 		log.Fatalln(err)
@@ -65,10 +73,6 @@ type KakaoResp struct {
 }
 
 func getKAKAOLatlng(address string) (string, string) {
-	const (
-		KAKAO     = "KakaoAK cc116147fce20da7314166dce21f0305"
-		KAKAO_URL = "https://dapi.kakao.com/v2/local/search/address.json"
-	)
 
 	req, _ := http.NewRequest("GET", KAKAO_URL, nil)
 
@@ -145,12 +149,6 @@ func loopPlaceElements(placeItems []selenium.WebElement) {
 }
 
 func KakaoCrawling(searchKeyword string) {
-
-	const (
-		seleniumPath = "./crawler/chromedriver.exe"
-		searchURL    = "https://map.kakao.com/"
-		port         = 5001
-	)
 
 	// chromeDriver := webdriver.NewChromeDriver(seleniumPath)
 	// defer chromeDriver.Stop()

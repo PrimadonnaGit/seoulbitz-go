@@ -47,6 +47,8 @@ func GetShop(c echo.Context) error {
 
 func ExecCrawling(c echo.Context) error {
 
+	fmt.Println("here")
+
 	searchKeyword := c.Param("searchKeyword")
 	
 	go func() {
