@@ -2,7 +2,6 @@ package crawler
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -10,8 +9,8 @@ import (
 	"time"
 
 	"github.com/PrimadonnaGit/seoulbitz-go/mysql"
+	"github.com/fedesog/webdriver"
 	"github.com/tebeka/selenium"
-	"github.com/tebeka/selenium/chrome"
 )
 
 const (
@@ -102,7 +101,7 @@ func getKAKAOLatlng(address string) (string, string) {
 
 }
 
-func loopPlaceElements(placeItems []selenium.WebElement) {
+func loopPlaceElements(placeItems []webdriver.WebElement) {
 	for _, placeItem := range placeItems {
 		placeTitleElement, err := placeItem.FindElement(selenium.ByCSSSelector, ".head_item .tit_name .link_name")
 		checkErr(err)
@@ -123,6 +122,7 @@ func loopPlaceElements(placeItems []selenium.WebElement) {
 		checkErr(err)
 
 		placeTitle, _ := placeTitleElement.Text()
+		placeTitle = strings.Replace(placeTitle, "광고","", -1)
 		placeSubCategory, _ := placeSubCategoryElement.Text()
 		placeScore, _ := placeScoreElement.Text()
 
@@ -142,7 +142,7 @@ func loopPlaceElements(placeItems []selenium.WebElement) {
 		db := mysql.ConnectDB()
 		defer db.Close()
 
-		_, err = db.Exec("INSERT INTO kakao_map (title, xpoint, ypoint, tag, score, scoreCount, reviewCount, address) VALUES (?,?,?,?,?,?,?,?)", placeTitle, lat, lng, placeSubCategory, placeScore, placeScoreCount, placeReviewCount, placeAddress)
+		_, err = db.Exec("INSERT IGNORE INTO kakao_map (title, xpoint, ypoint, tag, score, scoreCount, reviewCount, address) VALUES (?,?,?,?,?,?,?,?)", placeTitle, lat, lng, placeSubCategory, placeScore, placeScoreCount, placeReviewCount, placeAddress)
 		checkErr(err)
 
 	}
@@ -150,37 +150,19 @@ func loopPlaceElements(placeItems []selenium.WebElement) {
 
 func KakaoCrawling(searchKeyword string) {
 
-	// chromeDriver := webdriver.NewChromeDriver(seleniumPath)
-	// defer chromeDriver.Stop()
-	// err := chromeDriver.Start()
-	// checkErr(err)
-
-	// desired := webdriver.Capabilities{"Platform": "Windows"}
-
-	// required := webdriver.Capabilities{}
-	// session, err := chromeDriver.NewSession(desired, required)
-	// defer session.Delete()
-	// checkErr(err)
-	
-	selenium.SetDebug(true)
-	service, err := selenium.NewChromeDriverService(seleniumPath, port)
-	checkErr(err)
-	defer service.Stop()
-
-	caps := selenium.Capabilities{}
-
-	caps.AddChrome(chrome.Capabilities{
-		Args: []string{"--headless"},
-	})
-
-	session, err := selenium.NewRemote(caps, "http://127.0.0.1:5000")
+	chromeDriver := webdriver.NewChromeDriver(seleniumPath)
+	defer chromeDriver.Stop()
+	err := chromeDriver.Start()
 	checkErr(err)
 
-	fmt.Println("sss")
+	desired := webdriver.Capabilities{"Platform": "Windows"}
 
-	defer session.Quit()
+	required := webdriver.Capabilities{}
+	session, err := chromeDriver.NewSession(desired, required)
+	defer session.Delete()
+	checkErr(err)
 	
-	err = session.Get(searchURL)
+	err = session.Url(searchURL)
 	checkErr(err)
 	
 	// 검색 키워드 입력

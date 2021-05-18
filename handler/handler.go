@@ -52,6 +52,6 @@ func ExecCrawling(c echo.Context) error {
 	go func() {
 		crawler.KakaoCrawling(searchKeyword)
 	}()
-	
-	return c.String(http.StatusOK, "OK")
+
+	return c.String(http.StatusOK, "")
 }
