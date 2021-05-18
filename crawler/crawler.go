@@ -15,9 +15,9 @@ import (
 )
 
 const (
-	seleniumPath = "./crawler/chromedriver.exe"
+	seleniumPath = "./crawler/chromedriver"
 	searchURL    = "https://map.kakao.com/"
-	port         = 5001
+	port         = 5000
 	KAKAO     = "KakaoAK cc116147fce20da7314166dce21f0305"
 	KAKAO_URL = "https://dapi.kakao.com/v2/local/search/address.json"
 )
@@ -161,10 +161,10 @@ func KakaoCrawling(searchKeyword string) {
 	// session, err := chromeDriver.NewSession(desired, required)
 	// defer session.Delete()
 	// checkErr(err)
-
+	
+	selenium.SetDebug(true)
 	service, err := selenium.NewChromeDriverService(seleniumPath, port)
 	checkErr(err)
-
 	defer service.Stop()
 
 	caps := selenium.Capabilities{}
@@ -173,14 +173,16 @@ func KakaoCrawling(searchKeyword string) {
 		Args: []string{"--headless"},
 	})
 
-	session, err := selenium.NewRemote(caps, fmt.Sprintf("http://localhost:%d", port))
+	session, err := selenium.NewRemote(caps, "http://127.0.0.1:5000")
 	checkErr(err)
+
+	fmt.Println("sss")
 
 	defer session.Quit()
-
+	
 	err = session.Get(searchURL)
 	checkErr(err)
-
+	
 	// 검색 키워드 입력
 	keywordInput, _ := session.FindElement(selenium.ByCSSSelector, ".box_searchbar > input.query")
 	err = keywordInput.SendKeys(searchKeyword)

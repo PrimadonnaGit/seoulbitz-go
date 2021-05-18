@@ -47,13 +47,11 @@ func GetShop(c echo.Context) error {
 
 func ExecCrawling(c echo.Context) error {
 
-	fmt.Println("here")
-
 	searchKeyword := c.Param("searchKeyword")
 	
 	go func() {
 		crawler.KakaoCrawling(searchKeyword)
 	}()
-
-	return c.String(http.StatusOK, "")
+	
+	return c.String(http.StatusOK, "OK")
 }

@@ -17,7 +17,7 @@ func main() {
 
 	if debug {
 		// 일반적인 http 서버 실행
-		echoR.Logger.Fatal(echoR.Start(":5000"))
+		echoR.Logger.Fatal(echoR.Start(":80"))
 	} else {
 		// 보안 접속을 위한 https 서버 실행
 		// "cert.pem"과 "privkey.pem" 파일이 필요함

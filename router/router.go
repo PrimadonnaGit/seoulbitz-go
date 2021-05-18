@@ -20,10 +20,10 @@ func Router() *echo.Echo {
 	// echo middleware func
 	e.Use(middleware.Logger())  //Setting logger
 	e.Use(middleware.Recover()) //Recover from panics anywhere in the chain
-	// e.Use(middleware.CORSWithConfig(middleware.CORSConfig{ //CORS Middleware
-	//     AllowOrigins: []string{"*"},
-	//     AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
-	// }))
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{ //CORS Middleware
+	    AllowOrigins: []string{"*"},
+	    AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
+	}))
 
 	// Health check!
 	e.GET("/healthy", func(c echo.Context) error {
