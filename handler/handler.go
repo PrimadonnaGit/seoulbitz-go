@@ -10,24 +10,27 @@ import (
 )
 
 type Shop struct {
-	Index   int `db:"idx"`
-	Title   string `db:"title"`
-	X       float32 `db:"xpoint"`
-	Y       float32 `db:"ypoint"`
-	Tag     string `db:"tag"`
-	Score    float64 `db:"score"`
-	ScoreCount   int `db:"scoreCount"`
-	ReviewCount int `db:"reviewCount"`
-	Address  string `db:"address"`
+	Index       int     `db:"idx"`
+	Title       string  `db:"title"`
+	X           float32 `db:"xpoint"`
+	Y           float32 `db:"ypoint"`
+	Tag         string  `db:"tag"`
+	Score       float64 `db:"score"`
+	ScoreCount  int     `db:"scoreCount"`
+	ReviewCount int     `db:"reviewCount"`
+	Address     string  `db:"address"`
 }
 
 func GetShop(c echo.Context) error {
 
+	minScore := c.QueryParam("minScore")
+	minScoreCount := c.QueryParam("minScoreCount")
+
 	db := mysql.ConnectDB()
 	defer db.Close()
-	rows, err := db.Query("SELECT * FROM kakao_map Where score >= 4 AND scoreCount >= 10")
+	rows, err := db.Query(fmt.Sprintf("SELECT * FROM kakao_map Where score >= %v AND scoreCount >= %v", minScore, minScoreCount))
 	if err != nil {
-		fmt.Println(err)	
+		fmt.Println(err)
 	}
 
 	defer rows.Close()
@@ -48,7 +51,7 @@ func GetShop(c echo.Context) error {
 func ExecCrawling(c echo.Context) error {
 
 	searchKeyword := c.Param("searchKeyword")
-	
+
 	go func() {
 		crawler.KakaoCrawling(searchKeyword)
 	}()
